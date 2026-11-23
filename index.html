@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FurFandom — фурри-сообщество</title>
+  <meta name="description" content="Фурри-сообщество: фурри-суитсы, арт, персонажи, галерея и мероприятия.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== ПЕРЕМЕННЫЕ: СВЕТЛАЯ / ТЁМНАЯ ТЕМА ===== */
+    :root {
+      --bg: #faf7ff;
+      --surface: #ffffff;
+      --text: #3f2a5a;
+      --muted: #8266a3;
+      --primary: #9b5de5;
+      --primary-soft: #efe0ff;
+      --accent: #ff8a3d;
+      --accent-soft: #ffe7d6;
+      --pink: #f15bb5;
+      --pink-soft: #fbd9ec;
+      --border: #e9ddf8;
+      --shadow: 0 10px 30px rgba(120, 80, 200, 0.10);
+      --header-bg: rgba(250, 247, 255, 0.88);
+    }
+
+    [data-theme="dark"] {
+      --bg: #211730;
+      --surface: #2d2145;
+      --text: #f3edfb;
+      --muted: #bda6d6;
+      --primary: #b57ef0;
+      --primary-soft: #3a2a58;
+      --accent: #ffa15e;
+      --accent-soft: #4a3524;
+      --pink: #f28ac0;
+      --pink-soft: #4a2a44;
+      --border: #463364;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --header-bg: rgba(33, 23, 48, 0.88);
+    }
+
+    /* ===== БАЗА ===== */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; transition: background 0.3s ease, color 0.3s ease; }
+    img { max-width: 100%; height: auto; display: block; border-radius: 16px; }
+    h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; color: var(--text); }
+    a { color: var(--primary); text-decoration: none; }
+    .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+    /* ===== КНОПКА ===== */
+    .btn { display: inline-block; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-weight: 800; font-size: 1rem; padding: 12px 26px; border-radius: 999px; border: none; cursor: pointer; font-family: inherit; box-shadow: 0 8px 20px rgba(155, 93, 229, 0.35); transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(155, 93, 229, 0.45); filter: brightness(1.05); }
+    .btn:active { transform: translateY(0); }
+    .btn-ghost { background: var(--surface); color: var(--primary); border: 2px solid var(--primary); box-shadow: none; }
+
+    /* ===== ШАПКА ===== */
+    .site-header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; position: relative; }
+    .logo { font-size: 1.4rem; font-weight: 800; color: var(--text); white-space: nowrap; }
+    .logo span { color: var(--primary); }
+    .main-nav { position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); box-shadow: var(--shadow); display: none; }
+    .main-nav.open { display: block; }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 10px; margin: 0; }
+    .nav-link { display: block; padding: 11px 14px; border-radius: 12px; color: var(--text); font-weight: 700; transition: background 0.2s, color 0.2s; }
+    .nav-link:hover { background: var(--primary-soft); color: var(--primary); }
+    .nav-link.active { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .theme-toggle { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); font-size: 1.15rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; }
+    .theme-toggle:hover { transform: scale(1.1); }
+    .burger { display: flex; flex-direction: column; justify-content: center; gap: 5px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; cursor: pointer; }
+    .burger span { display: block; height: 2px; width: 20px; background: var(--text); border-radius: 2px; transition: transform 0.25s ease, opacity 0.25s ease; }
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ===== СТРАНИЦЫ ===== */
+    main { min-height: 60vh; padding-bottom: 60px; }
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .page-head { margin: 10px 0 22px; }
+    h1 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); margin: 0 0 12px; }
+    .lead { font-size: 1.12rem; color: var(--muted); max-width: 75ch; margin: 0 0 22px; }
+
+    /* ===== ГЕРОЙ, СЕТКИ, КАРТОЧКИ ===== */
+    .hero { display: grid; grid-template-columns: 1fr; gap: 18px; padding: 24px; align-items: center; }
+    @media (min-width: 768px) { .hero { grid-template-columns: 1.2fr 1fr; padding: 30px; } }
+    .hero h1 { margin-bottom: 12px; }
+    .hero-img { width: 100%; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr)); gap: 16px; margin-top: 22px; }
+    .grid-flat { margin-top: 0; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+    .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 16px 40px rgba(120, 80, 200, 0.18); }
+    .card-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .card h3 { margin: 0 0 8px; font-size: 1.2rem; }
+    .card p { color: var(--muted); margin: 0; }
+    .img-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); margin: 0; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .img-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(120, 80, 200, 0.2); }
+    .img-card img { width: 100%; border-radius: 0; }
+    .img-card figcaption { padding: 12px 16px; color: var(--muted); font-size: 0.95rem; }
+
+    /* ===== ИСТОРИЯ: ТАЙМЛАЙН ===== */
+    .timeline { position: relative; padding-left: 38px; display: flex; flex-direction: column; gap: 20px; margin-top: 10px; }
+    .timeline::before { content: ''; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 4px; border-radius: 4px; background: var(--primary-soft); }
+    .timeline-item { position: relative; }
+    .timeline-item::before { content: ''; position: absolute; left: -30px; top: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 4px solid var(--bg); box-shadow: 0 0 0 2px var(--primary); }
+    .timeline-item h3 { margin: 0 0 4px; }
+    .timeline-item p { margin: 0; color: var(--muted); }
+
+    /* ===== ГАЛЕРЕЯ ===== */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .gallery-grid img { width: 100%; height: auto; border-radius: 14px; transition: transform 0.25s ease; }
+    .gallery-grid img:hover { transform: scale(1.05); }
+
+    /* ===== FAQ ===== */
+    .faq details { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px 18px; box-shadow: var(--shadow); }
+    .faq details + details { margin-top: 10px; }
+    .faq summary { font-weight: 800; cursor: pointer; }
+    .faq details p { color: var(--muted); margin: 8px 0 0; }
+
+    /* ===== ФОРМА ===== */
+    .form { display: grid; gap: 12px; max-width: 560px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
+    .form input, .form textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; font-family: inherit; font-size: 1rem; color: var(--text); }
+    .form input:focus, .form textarea:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+    .form-message { color: var(--primary); font-weight: 700; }
+
+    /* ===== ТЕГ / ПОДВАЛ ===== */
+    .tag { display: inline-block; background: var(--primary-soft); color: var(--primary); font-weight: 800; font-size: 0.85rem; padding: 4px 12px; border-radius: 999px; margin-bottom: 8px; }
+    .site-footer { border-top: 1px solid var(--border); background: var(--surface); margin-top: 40px; }
+    .footer-inner { padding: 26px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+    .site-footer p { margin: 0; color: var(--muted); }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* ===== МЕДИА: MOBILE-FIRST, ЗЕРКАЛЬНЫЕ БРЕЙКПОИНТЫ ===== */
+    @media (min-width: 480px) { .container { padding: 0 20px; } }
+    @media (min-width: 768px) {
+      .burger { display: none; }
+      .main-nav { position: static; display: flex; background: transparent; border: none; box-shadow: none; }
+      .nav-list { flex-direction: row; gap: 4px; padding: 0; }
+      .nav-link { padding: 9px 14px; border-radius: 999px; }
+      .hero { padding: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ШАПКА: логотип, меню, переключатель темы -->
+  <header class="site-header">
+    <div class="header-inner container">
+      <a href="#home" class="logo">🦊 <span>FurFandom</span></a>
+      <nav class="main-nav" id="mainNav" aria-label="Основная навигация">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#home">Главная</a></li>
+          <li><a class="nav-link" href="#about">О сообществе</a></li>
+          <li><a class="nav-link" href="#history">История</a></li>
+          <li><a class="nav-link" href="#species">Виды</a></li>
+          <li><a class="nav-link" href="#fursuits">Фурри-суитсы</a></li>
+          <li><a class="nav-link" href="#art">Искусство</a></li>
+          <li><a class="nav-link" href="#artists">Художники</a></li>
+          <li><a class="nav-link" href="#cons">Конвенты</a></li>
+          <li><a class="nav-link" href="#glossary">Глоссарий</a></li>
+          <li><a class="nav-link" href="#faq">FAQ</a></li>
+          <li><a class="nav-link" href="#gallery">Галерея</a></li>
+          <li><a class="nav-link" href="#characters">Персонажи</a></li>
+          <li><a class="nav-link" href="#writing">Литература</a></li>
+          <li><a class="nav-link" href="#music">Музыка</a></li>
+          <li><a class="nav-link" href="#vrchat">VR</a></li>
+          <li><a class="nav-link" href="#community">Сообщество</a></li>
+          <li><a class="nav-link" href="#etiquette">Этикет</a></li>
+          <li><a class="nav-link" href="#resources">Ресурсы</a></li>
+          <li><a class="nav-link" href="#news">Новости</a></li>
+          <li><a class="nav-link" href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тёмную тему">🌙</button>
+        <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- СЕКЦИЯ: ГЛАВНАЯ (HOME) -->
+    <section id="page-home" class="page">
+      <div class="container">
+        <div class="hero card">
+          <div>
+            <h1>Добро пожаловать в FurFandom!</h1>
+            <p class="lead">Мы — большое и пушистое фурри-сообщество. Здесь можно фантазировать о себе, рисовать персонажей, строить фурри-суитсы и просто веселиться вместе.</p>
+            <div class="hero-actions">
+              <a class="btn" href="#about">Как мы живём</a>
+              <a class="btn btn-ghost" href="#gallery">Смотреть галерею</a>
+            </div>
+          </div>
+          <img class="hero-img" src="https://picsum.photos/seed/furhome1/800/500" alt="Фурри-сообщество на тематической выставке">
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🦊</div>
+            <h3>Моя фурри-личка</h3>
+            <p>Каждая история начинается с маленького пушка. Придумай имя, вид и характер — и пусть мир вокруг фурри оживает.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🎨</div>
+            <h3>Творчество</h3>
+            <p>Арт, музыка, истории и фурри-суитсы — всё это рождается в нашем творческом гаму.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🎉</div>
+            <h3>Встречи</h3>
+            <p>Конвенты, костюмированные пикники и клубные вечера — приходи, мы всегда тепло и уютно.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furfriend/800/500" alt="Дружная встреча фурри у фонтана">
+            <figcaption>Встречи у фонтана каждое полнолуние</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furparty/800/500" alt="Костюмированный пикник в парке">
+            <figcaption>Костюмированный пикник в городском парке</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: О СООБЩЕСТВЕ (ABOUT) -->
+    <section id="page-about" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>О нашем сообществе</h1>
+          <p class="lead">FurFandom объединяет фурри по всему миру: от маленьких городков до мегаполис. Здесь нет места скуке — только мягкие хвосты, яркие истории и море фиолетовых эмоций.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">💜</div>
+            <h3>Дружелюбие</h3>
+            <p>Мы против токсичности и хейта. Здесь принято поддерживать друг друга, а фурри — это повод забыть о грузе будней.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🛡️</div>
+            <h3>Безопасность</h3>
+            <p>Наши правила гласят: уважение и безопасность прежде всего. Всё личное остаётся личным, а приватность — свято.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">✨</div>
+            <h3>Творчество</h3>
+            <p>Творческая свобода — основа нашего гаму. Рисуйте, пишите, лепите, ваяйте — здесь всегда можно проявить фантазию.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furabout1/800/500" alt="Фурри-клуб за общим столом">
+            <figcaption>Завтрак фурри-клуба: пельмени и истории</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcrew1/800/500" alt="Фурри-поход в лес">
+            <figcaption>Ежегодный фурри-поход в лес</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ИСТОРИЯ (HISTORY) -->
+    <section id="page-history" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>История FurFandom</h1>
+          <p class="lead">Его зародила мечта о мире, где хвосты важнее носков. Теперь это целая вселенная с миллионами историй.</p>
+        </header>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <h3>2014 — Первые шаги</h3>
+            <p>На небольшом форуме появилась самая старая фурри-группа, а сообщество начало расти.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>2017 — Первые костюмы</h3>
+            <p>Первый фурри-суит был собран своими руками, и это стало началом большой эпопеи.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>2020 — Конвент</h3>
+            <p>«Пушистый Праздник» собрал первых гостей, а сообщество получило дом.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>2026 — Наше время</h3>
+            <p>Сейчас FurFandom — это сотни клубов, десятки конвентов и бесконечная фантазия.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/fuhistor1/800/500" alt="Первый фурри-клуб на встрече">
+            <figcaption>Первые посетители клуба, 2015</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furelse1/800/500" alt="Фурри-пикник в парке">
+            <figcaption>Фурри-пикник 2019 года</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ВИДЫ (SPECIES) -->
+    <section id="page-species" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Виды фурри</h1>
+          <p class="lead">Каждый фурри — уникальный персонаж. Вот лишь малая часть того, кого мы любим.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <img src="https://picsum.photos/seed/furwolf1/800/500" alt="Фурри-волк в грязных кроссовках">
+            <h3>Волк</h3>
+            <p>Самый популярный вид: загадочный, сильный, но очень обаятельный.</p>
+          </article>
+          <article class="card">
+            <img src="https://picsum.photos/seed/fufox1/800/500" alt="Фурри-лиса с палкой">
+            <h3>Лиса</h3>
+            <p>Хитрая и энергичная натура, мастер придумывать приключения.</p>
+          </article>
+          <article class="card">
+            <img src="https://picsum.photos/seed/fucat1/800/500" alt="Фурри-кот на клавиатуре">
+            <h3>Кошка</h3>
+            <p>Ленивая, мурлыкающая и крайне ласковая.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🐉</div>
+            <h3>Дракон</h3>
+            <p>Величественный и благородный хранитель древних тайн.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ФУРРИ-СУИТСЫ (FURSUITS) -->
+    <section id="page-fursuits" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Фурри-суитсы</h1>
+          <p class="lead">Фурри-суит — это больше, чем костюм. Это второе я, которое можно надеть и отправиться в большое приключение.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🧵</div>
+            <h3>Создание своими руками</h3>
+            <p>Каждая деталь шьётся вручную: от манжет до хвоста. Делу да делу, а фурри — вообще искусство.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🛒</div>
+            <h3>Покупка готового</h3>
+            <p>Готовые студии и магазины помогают собрать идеальный фурри-суит за считанные недели.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🤝</div>
+            <h3>Коллаборации</h3>
+            <p>Обмен опытом между строителями костюмов — лучший способ научиться всему.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/fursuit1/800/500" alt="Фурри-суит лисы на мероприятии">
+            <figcaption>Суит для большого фурри-костыля</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/fursuit2/800/500" alt="Фурри-суит волка на конверте">
+            <figcaption>Фурри-суит волка на конвенте</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/fursuit3/800/500" alt="Фурри-суит кота в студии">
+            <figcaption>Костюм кота в мастерской</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ИСКУССТВО (ART) -->
+    <section id="page-art" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Искусство</h1>
+          <p class="lead">Арт — сердце фурри. Мы собрали лучшие направления творчества нашего сообщества.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🎨</div>
+            <h3>Живопись</h3>
+            <p>Акварель, акрил и цифровая живопись: фурри с пушистыми хвостами уже рисуют века.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">💻</div>
+            <h3>3D-моделирование</h3>
+            <p>Персонажи для игр и анимации создаются на движках вроде Blender — с любовью и деталями.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📸</div>
+            <h3>Фотография</h3>
+            <p>Фурри-фотосессии, студийные портреты и пленочная камера — снимайте свой мир.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furart1/800/500" alt="Фурри-художник за мольбертом">
+            <figcaption>Студия художника: этюды и мольберт</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furart2/800/500" alt="3D-рендер фурри в игре">
+            <figcaption>3D-рендер для игрового мира</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furart3/800/500" alt="Фурри-фотосессия в студии">
+            <figcaption>Фурри-фотосессия: костюм и свет</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ХУДЕЖЕСТВА (ARTISTS) -->
+    <section id="page-artists" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Художники</h1>
+          <p class="lead">Знакомьтесь: наши любимые творцы, которые вдохновляют фурри-сообщество.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🖌️</div>
+            <h3>Астра</h3>
+            <p>Иллюстратор с фантастическим взглядом: рисует эмоции, которые видно только хвостикам.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🦴</div>
+            <h3>Нова</h3>
+            <p>3D-художник, создающий невероятно детализированные фурри-суиты для игр.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📷</div>
+            <h3>Ривер</h3>
+            <p>Фотограф, ловящий свет, пушистость и настоящую магию момента.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furartist1/800/500" alt="Иллюстрация Астры для книги">
+            <figcaption>Иллюстрация Астры для фурри-книги</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furartist2/800/500" alt="Работа Новы над моделью">
+            <figcaption>3D-модель от Новы</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furartist3/800/500" alt="Фурри-портрет от Ривера">
+            <figcaption>Фотопортрет от Ривера</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: КОНВЕНЦИИ (CONS) -->
+    <section id="page-cons" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Конвенты</h1>
+          <p class="lead">От больших мега-мероприятий до маленьких клубных вечеров — выбирай своё.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🎪</div>
+            <h3>«Пушистый Праздник»</h3>
+            <p>Крупнейший фурри-конвент с костюмированными парадами, конкурсами и гала-выставкой.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🏘️</div>
+            <h3>Городские клубы</h3>
+            <p>Маленькие встречи в парках и клубах: знакомство, настолки и общие истории.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">💻</div>
+            <h3>Онлайн-встречи</h3>
+            <p>VR-вечеринки и стримы для тех, кто живёт далеко от больших сообществ.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcon1/800/500" alt="Фурри-парад на конверте">
+            <figcaption>Фурри-парад на «Пушистом Празднике»</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcon2/800/500" alt="Фурри-вечеринка в клубе">
+            <figcaption>Фурри-вечеринка в клубе</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ГЛОССАРИЙ (GLOSSARY) -->
+    <section id="page-glossary" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Глоссарий</h1>
+          <p class="lead">Слова, которые помогут быстрее войти в пушистый мир фурри.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <h3>Фурри</h3>
+            <p>Человек с фурри-личкой или образом. Основная категория участников сообщества.</p>
+          </article>
+          <article class="card">
+            <h3>Фурсьон</h3>
+            <p>Фантастический зверь-фурри, персонаж, который живёт в голове у настоящего фурри.</p>
+          </article>
+          <article class="card">
+            <h3>Фурри-суит</h3>
+            <p>Костюм фурри: от лапок и хвоста до полного образа.</p>
+          </article>
+          <article class="card">
+            <h3>Творческий гам</h3>
+            <p>Наше тайное слово для всей вселенной фурри: арт, музыка, истории, костюмы.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furgloss1/800/500" alt="Фурри-термины на стенде">
+            <figcaption>Стенд с фурри-терминами</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furgloss2/800/500" alt="Карточки глоссария">
+            <figcaption>Карточки глоссария для новичков</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: FAQ -->
+    <section id="page-faq" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Частые вопросы</h1>
+          <p class="lead">Собрали самые популярные вопросы новичков и ответы на них.</p>
+        </header>
+
+        <div class="faq">
+          <details>
+            <summary>Нужен ли мне фурри-костюм, чтобы приходить?</summary>
+            <p>Нет! Костюм — это замечательно, но большинство мероприятий проходят и без него. Добро пожаловать и в обычных кроссовках.</p>
+          </details>
+          <details>
+            <summary>В каком возрасте начать?</summary>
+            <p>С 12 лет, но главное — интерес и уважение. Взрослые фурри приветствуются так же тепло, как и дети.</p>
+          </details>
+          <details>
+            <summary>Какие правила этикета?</summary>
+            <p>Не трогайте чужой костюм без спроса, уважайте личное пространство и помните: хвостик нельзя щипать.</p>
+          </details>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furfaq1/800/500" alt="Фурри-встреча с вопросами">
+            <figcaption>Встреча с ответами на вопросы</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furfaq2/800/500" alt="Фурри-директор объясняет правила">
+            <figcaption>Объяснение правил фурри-встречи</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ГАЛЕРЕЯ (GALLERY) -->
+    <section id="page-gallery" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Галерея</h1>
+          <p class="lead">Лучшие работы фурри: арты, фото и кадры с мероприятий.</p>
+        </header>
+
+        <div class="gallery-grid">
+          <img src="https://picsum.photos/seed/furgal1/800/500" alt="Фурри-арт: рыжий лисёнок">
+          <img src="https://picsum.photos/seed/furgal2/800/500" alt="Фурри-фото в лесу">
+          <img src="https://picsum.photos/seed/furgal3/800/500" alt="Фурри-суит на конверте">
+          <img src="https://picsum.photos/seed/furgal4/800/500" alt="Фурри-история: подземелье">
+          <img src="https://picsum.photos/seed/furgal5/800/500" alt="Фурри-музыка в студии">
+          <img src="https://picsum.photos/seed/furgal6/800/500" alt="Фурри-клуб за ужином">
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ПЕРСОНАЖИ (CHARACTERS) -->
+    <section id="page-characters" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Персонажи</h1>
+          <p class="lead">Рассказываем истории наших любимых фурри-лиц.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <img src="https://picsum.photos/seed/furchar1/800/500" alt="Персонаж Рекс — лисичка-бунтарь">
+            <h3>Рекс</h3>
+            <p>Волк-лисичка, который всё время ищет приключений. Очень смелый и очень громкий.</p>
+          </article>
+          <article class="card">
+            <img src="https://picsum.photos/seed/furchar2/800/500" alt="Персонаж Найка — кот-мечтатель">
+            <h3>Найка</h3>
+            <p>Кот-мечтатель, которая видит сказки даже в серых буднях.</p>
+          </article>
+          <article class="card">
+            <img src="https://picsum.photos/seed/furchar3/800/500" alt="Персонаж Дракон — хранитель леса">
+            <h3>Дракон</h3>
+            <p>Величественный дракон, хранитель древних тайн леса.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ЛИТЕРАТУРА (WRITING) -->
+    <section id="page-writing" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Литература</h1>
+          <p class="lead">Промпты, истории и фанфикшен для тех, кто пишет фурри-сны.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">✍️</div>
+            <h3>Промпт дня</h3>
+            <p>«Что видит лисёнок в подземелье?» — начни с самого маленького героя.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📖</div>
+            <h3>Истории</h3>
+            <p>Клубные истории о встрече в парке, тайне леса и общем дне.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🌙</div>
+            <h3>Сны</h3>
+            <p>Фурри-сны для двоих: лёгкий романс о встрече двух хвостов.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furwrit1/800/500" alt="Рукописные фурри-истории">
+            <figcaption>Рукописные фурри-истории</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furwrit2/800/500" alt="Фурри-книга в мягкой обложке">
+            <figcaption>Фурри-книга: «Хвосты и сны»</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: МУЗИКА (MUSIC) -->
+    <section id="page-music" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Музыка</h1>
+          <p class="lead">Фурри-музыка: от эмбиент-лесов до танцевальных хвостатых битов.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🎶</div>
+            <h3>«Лесная мелодия»</h3>
+            <p>Этюд для флейты и хора, написанный после похода в лес.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🎸</div>
+            <h3>Хвостатый бит</h3>
+            <p>Инди-трек для танцев: «танцы с фурри-суитами разрешены».</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🎹</div>
+            <h3>Пиши сам</h3>
+            <p>Обратись к любимому инструменту — и пусть твой фурри-арт станет музыкой.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furmus1/800/500" alt="Фурри-музыкант с инструментом">
+            <figcaption>Фурри-музыкант в студии</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furmus2/800/500" alt="Фурри-вечеринка с живой музыкой">
+            <figcaption>Живая музыка на фурри-вечеринке</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: VRCHAT -->
+    <section id="page-vrchat" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>VR и метавселенные</h1>
+          <p class="lead">Фурри в виртуальном мире: скины, миры и безграничные встречи.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">🕹️</div>
+            <h3>VR-встречи</h3>
+            <p>Скины фурри для VR — это почти как настоящий костюм, только без пота.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🌐</div>
+            <h3>Метавселенные</h3>
+            <p>Строим целые фурри-миры с лесами, прудами и галереями.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🎥</div>
+            <h3>Стримы</h3>
+            <p>Встречи с артами и историями — каждый четверг вечером.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furvr1/800/500" alt="Фурри в VR-мире">
+            <figcaption>Фурри в VR-мире леса</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furvr2/800/500" alt="VR-встреча в фурри-клубе">
+            <figcaption>VR-встреча в клубе</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: СООБЩЕСТВО (COMMUNITY) -->
+    <section id="page-community" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Сообщество</h1>
+          <p class="lead">Как устроен наш большой пушистый дом: чаты, клубы и активности.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">💬</div>
+            <h3>Чаты</h3>
+            <p>Три больших чата: фурри-арт, фурри-суитсы и фурри-рассуждения.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🏘️</div>
+            <h3>Клубы</h3>
+            <p>Локальные клубы в каждом крупном городе, от Калининграда до Владивостока.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📅</div>
+            <h3>Мероприятия</h3>
+            <p>Еженедельные встречи, конвенты, фестивали и зимние каникулы.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcomm1/800/500" alt="Фурри-встреча в кафе">
+            <figcaption>Встреча фурри в кафе</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcomm2/800/500" alt="Фурри-пикник">
+            <figcaption>Фурри-пикник с костюмами</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: ЭТИКЕТ (ETIQUETTE) -->
+    <section id="page-etiquette" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Этикет</h1>
+          <p class="lead">Правила хорошего фурри: мягкие, но обязательные.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">📜</div>
+            <h3>Спроси, прежде чем трогать</h3>
+            <p>Костюм — личная территория. Лучше спросить, чем случайно обидеть.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🐾</div>
+            <h3>Хвостик нельзя щипать</h3>
+            <p>Это работает только в шутку и только с близкими друзьями.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🌈</div>
+            <h3>Приветствие и прочее</h3>
+            <p>Мир фурри — про любовь, поддержку и безусловное приветствие каждого.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furetiq1/800/500" alt="Фурри-этикетная встреча">
+            <figcaption>Встреча по фурри-этикету</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furetiq2/800/500" alt="Фурри-сообщество за общим делом">
+            <figcaption>Общее дело: арт и костюмы</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: РЕСУРСЫ (RESOURCES) -->
+    <section id="page-resources" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Ресурсы</h1>
+          <p class="lead">Полезные ссылки, софт и материалы для начинающих фурри.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">💻</div>
+            <h3>Софт</h3>
+            <p>Гайды по Blender, Paint и фоторедакторам для фурри-артов.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🧰</div>
+            <h3>Инструменты</h3>
+            <p>Чек-листы по пошиву фурри-суитов и выбору материалов.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📚</div>
+            <h3>Литература</h3>
+            <p>Список фурри-книг и комиксов для знакомства с вселенной.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furres1/800/500" alt="Фурри-ресурсная библиотека">
+            <figcaption>Библиотека фурри-ресурсов</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furres2/800/500" alt="Фурри-обучение в онлайне">
+            <figcaption>Онлайн-обучение фурри-мастерству</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: НОВОСТИ (NEWS) -->
+    <section id="page-news" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Новости</h1>
+          <p class="lead">Что нового происходит в нашем пушистом мире.</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <span class="tag">2026</span>
+            <h3>Новый конвент анонсирован</h3>
+            <p>«Пушистый Праздник» вернётся с ещё большим фурри-парадом и гала-выставкой.</p>
+          </article>
+          <article class="card">
+            <span class="tag">2026</span>
+            <h3>Фестиваль арта собрал 50 работ</h3>
+            <p>Соревнование по фурри-артам завершилось триумфом лисички Рекса.</p>
+          </article>
+          <article class="card">
+            <span class="tag">2025</span>
+            <h3>Новый глоссарий онлайн</h3>
+            <p>Добавлены карточки для VR-фурри, фурри-музыки и фурри-кино.</p>
+          </article>
+        </div>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furnews1/800/500" alt="Анонс нового конвента">
+            <figcaption>Анонс нового конвента</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furnews2/800/500" alt="Фурри-арт-фестиваль">
+            <figcaption>Фурри-арт-фестиваль</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ: КОНТАКТЫ (CONTACTS) -->
+    <section id="page-contacts" class="page">
+      <div class="container">
+        <header class="page-head">
+          <h1>Контакты</h1>
+          <p class="lead">Как с нами связаться: чаты, почта, встречи. Мы всегда рады новичкам!</p>
+        </header>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">💬</div>
+            <h3>Чаты</h3>
+            <p>Присоединяйся к нашим комментариям в Telegram и Discord — ссылка в шапке сайта.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">✉️</div>
+            <h3>Почта</h3>
+            <p>Пиши на hello@furfandom.example — отвечаем в течение дня.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">📍</div>
+            <h3>Встречи</h3>
+            <p>Ближайшая встреча — в субботу в 12:00 в парке. Знакомься, гуляй, фурри-радуйся.</p>
+          </article>
+        </div>
+
+        <form class="form card" id="contactForm">
+          <h3>Написать нам</h3>
+          <input type="text" id="nameInput" placeholder="Твоё имя или ник" required>
+          <input type="email" id="emailInput" placeholder="Твой e-mail" required>
+          <textarea id="messageInput" rows="4" placeholder="Расскажи, чем помочь или что спросить" required></textarea>
+          <button class="btn" type="submit">Отправить 🐾</button>
+          <p class="form-message" id="formMessage"></p>
+        </form>
+
+        <div class="grid">
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcont1/800/500" alt="Фурри-встреча в парке">
+            <figcaption>Первая встреча в этом сезоне</figcaption>
+          </figure>
+          <figure class="img-card">
+            <img src="https://picsum.photos/seed/furcont2/800/500" alt="Фурри-суит на мероприятии">
+            <figcaption>Фурри-суит на празднике</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ПОДВАЛ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>🦊 FurFandom — фурри-сообщество в сети</p>
+      <nav class="footer-nav" aria-label="Примерное меню в подвале">
+        <a href="#home">Главная</a>
+        <a href="#gallery">Галерея</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var THEME_KEY = 'furfandom-theme';
+      var burger = document.getElementById('burger');
+      var nav = document.getElementById('mainNav');
+
+      /* ===== ХЕШ-РОУТИНГ: получение id страницы из location.hash ===== */
+      function getPageIdFromHash() {
+        var raw = (window.location.hash || '').replace(/^#/, '').trim();
+        var id = raw.replace(/^page-/, '');
+        return id || 'home';
+      }
+
+      /* ===== ПОКАЗ ИЛИ СКРЫТИЕ СЕКЦИИ + обновление меню ===== */
+      function showPage(id) {
+        var pageEl = document.getElementById('page-' + id);
+        if (!pageEl) { return; }
+        document.querySelectorAll('.page').forEach(function (el) { el.classList.remove('active'); });
+        document.querySelectorAll('.nav-link').forEach(function (link) {
+          var target = (link.getAttribute('href') || '').replace(/^#/, '').replace(/^page-/, '');
+          if (target === id) { link.classList.add('active'); }
+        });
+        pageEl.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+
+      function handleHashChange() {
+        showPage(getPageIdFromHash());
+      }
+
+      window.addEventListener('hashchange', handleHashChange);
+
+      /* ===== МОБИЛЬНОЕ МЕНЮ: бургер-меню ===== */
+      burger.addEventListener('click', function (e) {
+        e.preventDefault();
+        var willOpen = !nav.classList.contains('open');
+        nav.classList.toggle('open', willOpen);
+        burger.classList.toggle('open', willOpen);
+        burger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+
+      document.querySelectorAll('.nav-link').forEach(function (link) {
+        link.addEventListener('click', function () {
+          nav.classList.remove('open');
+          burger.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      /* ===== ТЁМНАЯ / СВЕТЛАЯ ТЕМА (localStorage) ===== */
+      var themeToggle = document.getElementById('themeToggle');
+      var savedTheme = localStorage.getItem(THEME_KEY);
+      if (savedTheme) { document.documentElement.setAttribute('data-theme', savedTheme); }
+      themeToggle.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem(THEME_KEY, next); } catch (err) { /* localStorage может быть недоступен */ }
+      });
+
+      /* ===== ФОРМА КОНТАКТОВ ===== */
+      var form = document.getElementById('contactForm');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var msg = document.getElementById('formMessage');
+          if (msg) { msg.textContent = 'Спасибо! Ваше сообщение уже летит нам в гаму 🐾'; }
+          form.reset();
+        });
+      }
+
+      /* ===== ИНИЦИАЛИЗАЦИЯ: показываем страницу из текущего хеша ===== */
+      showPage(getPageIdFromHash());
+    })();
+  </script>
+</body>
+</html>
